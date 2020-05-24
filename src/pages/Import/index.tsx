@@ -20,17 +20,24 @@ interface FileProps {
 
 const Import: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<FileProps[]>([]);
+  const [inputError, setInputError] = useState('');
   const history = useHistory();
 
   async function handleUpload(): Promise<void> {
+    if (!uploadedFiles.length) {
+      setInputError('Arraste ao menos 1 arquivo');
+      return;
+    }
+
     const data = new FormData();
     data.append('file', uploadedFiles[0].file);
 
     try {
       await api.post('/transactions/import', data);
+      setInputError('');
       history.push('/');
     } catch (err) {
-      console.log(err.response.error);
+      setInputError('Upload falhou, tente novamente');
     }
   }
 
@@ -43,6 +50,7 @@ const Import: React.FC = () => {
     };
 
     setUploadedFiles([fileProps]);
+    setInputError('');
   }
 
   return (
@@ -54,10 +62,10 @@ const Import: React.FC = () => {
           <Upload onUpload={submitFile} />
           {!!uploadedFiles.length && <FileList files={uploadedFiles} />}
 
-          <Footer>
+          <Footer hasError={!!inputError}>
             <p>
               <img src={alert} alt="Alert" />
-              Permitido apenas arquivos CSV
+              {inputError || 'Permitido apenas arquivos CSV'}
             </p>
             <button onClick={handleUpload} type="button">
               Enviar

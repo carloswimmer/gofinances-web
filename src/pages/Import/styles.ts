@@ -1,5 +1,9 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { shade } from 'polished';
+
+interface FooterProps {
+  hasError: boolean;
+}
 
 export const Container = styled.div`
   width: 100%;
@@ -23,7 +27,7 @@ export const ImportFileContainer = styled.section`
   padding: 64px;
 `;
 
-export const Footer = styled.section`
+export const Footer = styled.section<FooterProps>`
   margin-top: 36px;
   display: flex;
   align-items: center;
@@ -35,6 +39,12 @@ export const Footer = styled.section`
     font-size: 12px;
     line-height: 18px;
     color: #969cb3;
+
+    ${props =>
+      props.hasError &&
+      css`
+        color: #c53030;
+      `}
 
     img {
       margin-right: 5px;

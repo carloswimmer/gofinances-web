@@ -43,12 +43,11 @@ const Dashboard: React.FC = () => {
       } = response.data;
 
       const formattedTransactions = transactionsResponse.map(
-        (transaction: Transaction) => {
-          const item = { ...transaction };
-          item.formattedValue = formatValue(item.value);
-          item.formattedDate = format(new Date(item.created_at), 'dd/MM/yyyy');
-          return item;
-        },
+        (transaction: Transaction) => ({
+          ...transaction,
+          formattedValue: formatValue(transaction.value),
+          formattedDate: format(new Date(transaction.created_at), 'dd/MM/yyyy'),
+        }),
       );
 
       const formattedBalance: Balance = {
