@@ -20,12 +20,12 @@ interface FileProps {
 
 const Import: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<FileProps[]>([]);
-  const [inputError, setInputError] = useState('');
+  const [uploadError, setUploadError] = useState('');
   const history = useHistory();
 
   async function handleUpload(): Promise<void> {
     if (!uploadedFiles.length) {
-      setInputError('Arraste ao menos 1 arquivo');
+      setUploadError('Arraste ao menos 1 arquivo');
       return;
     }
 
@@ -34,10 +34,10 @@ const Import: React.FC = () => {
 
     try {
       await api.post('/transactions/import', data);
-      setInputError('');
+      setUploadError('');
       history.push('/');
     } catch (err) {
-      setInputError('Upload falhou, tente novamente');
+      setUploadError('Upload falhou, tente novamente');
     }
   }
 
@@ -50,7 +50,7 @@ const Import: React.FC = () => {
     };
 
     setUploadedFiles([fileProps]);
-    setInputError('');
+    setUploadError('');
   }
 
   return (
@@ -62,10 +62,10 @@ const Import: React.FC = () => {
           <Upload onUpload={submitFile} />
           {!!uploadedFiles.length && <FileList files={uploadedFiles} />}
 
-          <Footer hasError={!!inputError}>
+          <Footer hasError={!!uploadError}>
             <p>
               <img src={alert} alt="Alert" />
-              {inputError || 'Permitido apenas arquivos CSV'}
+              {uploadError || 'Permitido apenas arquivos CSV'}
             </p>
             <button onClick={handleUpload} type="button">
               Enviar
